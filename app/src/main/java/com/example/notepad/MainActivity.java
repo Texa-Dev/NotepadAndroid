@@ -1,17 +1,18 @@
 package com.example.notepad;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.PopupMenu;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.notepad.databinding.ActivityMainBinding;
 
@@ -31,25 +32,90 @@ public class MainActivity extends AppCompatActivity {
         binding.editText.setText("111");
         binding.editText.setTextSize(25);
 
-       /* SpannableString string = new SpannableString("0123456789");
+        /*SpannableString string = new SpannableString("0123456789");
         ForegroundColorSpan span = new ForegroundColorSpan(0xFFFF0000);
         string.setSpan(span,3,7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         binding.editText.setText(string);*/
-        binding.colorBtn.setTag(new ForegroundColorSpan(0x00000000));
-
+        binding.colorBtn.setTag(new ForegroundColorSpan(Color.BLACK));
         binding.colorBtn.setOnClickListener(view -> {
-
             SpannableString spannable = new SpannableString(binding.editText.getText());
             spannable.setSpan(binding.colorBtn.getTag(),
+
                     binding.editText.getSelectionStart(),
                     binding.editText.getSelectionEnd(),
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            binding.editText.setText(spannable);
+
         });
 
-       /* binding.colorBtn.setOnLongClickListener(view -> {
 
-        });*/
+        binding.colorBtn.setOnLongClickListener(view -> {
+            PopupMenu popupMenu = new PopupMenu(this, view);
+            popupMenu.getMenuInflater().inflate(R.menu.color_btn_menu, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.breenBtn:
+                        binding.colorBtn.setTag(new ForegroundColorSpan(Color.GREEN));
+                        return true;
+                    case R.id.redBtn:
+                        binding.colorBtn.setTag(new ForegroundColorSpan(Color.RED));
+                        return true;
+                    case R.id.blackBtn:
+                        binding.colorBtn.setTag(new ForegroundColorSpan(Color.BLACK));
+                        return true;
+                    case R.id.blueBtn:
+                        binding.colorBtn.setTag(new ForegroundColorSpan(Color.BLUE));
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+
+            popupMenu.show();
+
+            return true;
+
+        });
+
+        binding.backgroundBtn.setTag(new  BackgroundColorSpan(Color.WHITE));
+        binding.backgroundBtn.setOnClickListener(view -> {
+            SpannableString spannable = new SpannableString(binding.editText.getText());
+            spannable.setSpan(binding.backgroundBtn.getTag(),
+                    binding.editText.getSelectionStart(),
+                    binding.editText.getSelectionEnd(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            binding.editText.setText(spannable);
+
+        });
+
+        binding.backgroundBtn.setOnLongClickListener(view -> {
+            PopupMenu popupMenu = new PopupMenu(this, view);
+            popupMenu.getMenuInflater().inflate(R.menu.background_btn_menu, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.backgroundGreenBtn:
+                        binding.backgroundBtn.setTag(new BackgroundColorSpan(Color.GREEN));
+                        return true;
+                    case R.id.backgroundRedBtn:
+                        binding.backgroundBtn.setTag(new BackgroundColorSpan(Color.RED));
+                        return true;
+                    case R.id.backgroundBlackBtn:
+                        binding.backgroundBtn.setTag(new BackgroundColorSpan(Color.BLACK));
+                        return true;
+                    case R.id.backgroundBlueBtn:
+                        binding.backgroundBtn.setTag(new BackgroundColorSpan(Color.BLUE));
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+
+            popupMenu.show();
+
+            return true;
+
+        });
     }
 
     @Override
