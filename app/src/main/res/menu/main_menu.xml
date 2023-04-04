@@ -14,6 +14,21 @@
         android:id="@+id/settingsMenu"
         android:title="Settings" />
     <item
+        android:id="@+id/fontSizemenu"
+        android:title="Font size" >
+        <menu >
+            <item
+                android:id="@+id/smallFontSize"
+                android:title="Small" />
+            <item
+                android:id="@+id/mediumFontSize"
+                android:title="Medium" />
+            <item
+                android:id="@+id/largeFontSize"
+                android:title="Large" />
+        </menu>
+    </item>
+    <item
         android:id="@+id/themesMenu"
         android:title="Themes" >
         <menu >
