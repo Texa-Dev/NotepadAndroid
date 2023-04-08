@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 
 import com.example.notepad.R;
@@ -21,6 +22,15 @@ public class Settings {
     private int fontSize;
     private int backgroundColor;
     private int foregroundColorSpan;
+    private int styleSpan;
+
+    public int getStyleSpan() {
+        return styleSpan;
+    }
+
+    public void setStyleSpan(int styleSpan) {
+        this.styleSpan = styleSpan;
+    }
 
     public static Settings settings() {
         if (settings == null)
@@ -175,6 +185,34 @@ public class Settings {
         }
         return this;
     }
+    public Settings saveStyleSpan(Context context) {
+        try {
+            FileOutputStream outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            Gson gson = new Gson();
+            String json = gson.toJson(this);
+            outputStream.write(json.getBytes());
+        } catch (Exception e) {
+            Log.d("FF", "save: " + e);
+        }
+        return this;
+    }
+
+    public Settings loadStyleSpan(Context context){
+        try {
+            FileInputStream inputStream = context.openFileInput(fileName);
+            Gson gson = new Gson();
+            Scanner scanner = new Scanner(inputStream);
+            String json = scanner.nextLine();
+            Settings loadedSettings = gson.fromJson(json, Settings.class);
+            if (loadedSettings != null) {
+                this.styleSpan = loadedSettings.styleSpan;
+            }
+        } catch (Exception e) {
+            Log.d("FF", "load: " + e);
+        }
+        return this;
+    }
+
 
 
     public int getTheme() {

@@ -1,11 +1,15 @@
 package com.example.notepad;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -24,6 +28,8 @@ import java.io.FileOutputStream;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
+
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
         int backgroundColor = Settings.settings().loadBackgroundColorSpan(this).getBackgroundColor();
         if (backgroundColor != 0) {
             binding.editText.setBackgroundColor(backgroundColor);
+        }
+        int styleSpan = Settings.settings().loadStyleSpan(this).getStyleSpan();
+        if (styleSpan != 0) {
+            Log.d("FF", "styleSpan.getStyle(): "+ styleSpan);
+            binding.editText.setTypeface(Typeface.SERIF, styleSpan);
         }
         //
         // binding.editText.setTextSize(TypedValue.COMPLEX_UNIT_SP,settings.getFontSize());
@@ -151,22 +162,35 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.styleBtn.setOnClickListener(view -> {
+            Object tag = binding.styleBtn.getTag();
+            if (tag instanceof StyleSpan) {
 
+                StyleSpan styleSp = (StyleSpan) tag;
+                SpannableString spannable = new SpannableString(binding.editText.getText());
+                spannable.setSpan(styleSp,
+                        binding.editText.getSelectionStart(),
+                        binding.editText.getSelectionEnd(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                binding.editText.setText(spannable);
+
+                Settings.settings().setStyleSpan(styleSp.getSpanTypeId());
+                Settings.settings().saveStyleSpan(this);
+            }
         });
 
         binding.styleBtn.setOnLongClickListener(view -> {
             PopupMenu popupMenu = new PopupMenu(this, view);
-            popupMenu.getMenuInflater().inflate(R.menu.background_btn_menu, popupMenu.getMenu());
+            popupMenu.getMenuInflater().inflate(R.menu.style_btn_menu, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
-                    case R.id.backgroundGreenBtn:
-                        binding.backgroundBtn.setTag(new BackgroundColorSpan(Color.GREEN));
+                    case R.id.boldBtn:
+                        binding.styleBtn.setTag(new StyleSpan(Typeface.BOLD));
                         return true;
-                    case R.id.backgroundRedBtn:
-                        binding.backgroundBtn.setTag(new BackgroundColorSpan(Color.RED));
+                    case R.id.italycBtn:
+                        binding.styleBtn.setTag(new StyleSpan(Typeface.ITALIC));
                         return true;
-                    case R.id.backgroundBlueBtn:
-                        binding.backgroundBtn.setTag(new BackgroundColorSpan(Color.BLUE));
+                    case R.id.normalBtn:
+                        binding.styleBtn.setTag(new StyleSpan(Typeface.NORMAL));
                         return true;
                     default:
                         return false;
