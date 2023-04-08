@@ -34,13 +34,21 @@ public class MainActivity extends AppCompatActivity {
         Settings.settings().load(this);
         int fontSize = Settings.settings().loadFontSize(this).getFontSize();
         if (fontSize > 0) {
-
             binding.editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize);
-            //Log.d("FF", "fontSize: settingsMenu  " + fontSize);
+        }
+        int foregroundColor = Settings.settings().loadForegroundColorSpan(this).getForegroundColorSpan();
+        if (foregroundColor != 0) {
+            binding.editText.setTextColor(foregroundColor);
+        }
+        int backgroundColor = Settings.settings().loadBackgroundColorSpan(this).getBackgroundColor();
+        if (backgroundColor != 0) {
+            binding.editText.setBackgroundColor(backgroundColor);
         }
         //
         // binding.editText.setTextSize(TypedValue.COMPLEX_UNIT_SP,settings.getFontSize());
-        binding.editText.setText(String.valueOf(fontSize));
+
+        // для проверки
+        //  binding.editText.setText(String.valueOf(fontSize));
 
         /*SpannableString string = new SpannableString("0123456789");
         ForegroundColorSpan span = new ForegroundColorSpan(0xFFFF0000);
@@ -50,16 +58,21 @@ public class MainActivity extends AppCompatActivity {
 
         binding.colorBtn.setTag(new ForegroundColorSpan(Color.BLACK));
         binding.colorBtn.setOnClickListener(view -> {
-            SpannableString spannable = new SpannableString(binding.editText.getText());
-            spannable.setSpan(binding.colorBtn.getTag(),
+            Object tag = binding.colorBtn.getTag();
+            if (tag instanceof ForegroundColorSpan) {
 
-                    binding.editText.getSelectionStart(),
-                    binding.editText.getSelectionEnd(),
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            binding.editText.setText(spannable);
+                ForegroundColorSpan foregroundColorSpan = (ForegroundColorSpan) tag;
+                SpannableString spannable = new SpannableString(binding.editText.getText());
+                spannable.setSpan(foregroundColorSpan,
+                        binding.editText.getSelectionStart(),
+                        binding.editText.getSelectionEnd(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                binding.editText.setText(spannable);
 
+                Settings.settings().setForegroundColorSpan(foregroundColorSpan.getForegroundColor());
+                Settings.settings().saveBackgroundColorSpan(this);
+            }
         });
-
 
         binding.colorBtn.setOnLongClickListener(view -> {
             PopupMenu popupMenu = new PopupMenu(this, view);
@@ -83,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            Settings.settings().saveForegroundColorSpan(this);
             popupMenu.show();
 
             return true;
@@ -91,13 +105,20 @@ public class MainActivity extends AppCompatActivity {
 
         binding.backgroundBtn.setTag(new BackgroundColorSpan(Color.WHITE));
         binding.backgroundBtn.setOnClickListener(view -> {
-            SpannableString spannable = new SpannableString(binding.editText.getText());
-            spannable.setSpan(binding.backgroundBtn.getTag(),
-                    binding.editText.getSelectionStart(),
-                    binding.editText.getSelectionEnd(),
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            binding.editText.setText(spannable);
+            Object tag = binding.backgroundBtn.getTag();
+            if (tag instanceof BackgroundColorSpan) {
 
+                BackgroundColorSpan backgroundColorSpan = (BackgroundColorSpan) tag;
+                SpannableString spannable = new SpannableString(binding.editText.getText());
+                spannable.setSpan(backgroundColorSpan,
+                        binding.editText.getSelectionStart(),
+                        binding.editText.getSelectionEnd(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                binding.editText.setText(spannable);
+
+                Settings.settings().setBackgroundColor(backgroundColorSpan.getBackgroundColor());
+                Settings.settings().saveBackgroundColorSpan(this);
+            }
         });
 
         binding.backgroundBtn.setOnLongClickListener(view -> {
@@ -121,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         return false;
                 }
             });
+
 
             popupMenu.show();
 
@@ -181,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
                 Settings.settings().setFontSize(32);
                 binding.editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32
                 );
-
                 break;
             case R.id.lightMenu:
                 Log.d("FF", "onOptionsItemSelected: lightMenu");

@@ -2,6 +2,8 @@ package com.example.notepad.settings;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 import com.example.notepad.R;
@@ -17,6 +19,8 @@ public class Settings {
     private final String fileName = "settings.json";
     private static Settings settings;
     private int fontSize;
+    private int backgroundColor;
+    private int foregroundColorSpan;
 
     public static Settings settings() {
         if (settings == null)
@@ -27,6 +31,21 @@ public class Settings {
     private Settings() {
     }
 
+    public int getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(int backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public int getForegroundColorSpan() {
+        return foregroundColorSpan;
+    }
+
+    public void setForegroundColorSpan(int foregroundColorSpan) {
+        this.foregroundColorSpan = foregroundColorSpan;
+    }
 
     public Settings setFontSize(int size) {
         fontSize = size;
@@ -48,6 +67,16 @@ public class Settings {
             Log.d("FF", "save: " + e);
         }
         return settings();
+    }
+
+    @Override
+    public String toString() {
+        return "Settings{" +
+                "fileName='" + fileName + '\'' +
+                ", fontSize=" + fontSize +
+                ", backgroundColorSpan=" + backgroundColor +
+                ", foregroundColorSpan=" + foregroundColorSpan +
+                '}';
     }
 
     public Settings load(Context context) {
@@ -84,6 +113,62 @@ public class Settings {
             Settings loadedSettings = gson.fromJson(json, Settings.class);
             if (loadedSettings != null) {
                 this.fontSize = loadedSettings.fontSize;
+            }
+        } catch (Exception e) {
+            Log.d("FF", "load: " + e);
+        }
+        return this;
+    }
+
+    public Settings saveBackgroundColorSpan(Context context) {
+        try {
+            FileOutputStream outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            Gson gson = new Gson();
+            String json = gson.toJson(this);
+            outputStream.write(json.getBytes());
+        } catch (Exception e) {
+            Log.d("FF", "save: " + e);
+        }
+        return this;
+    }
+
+    public Settings loadBackgroundColorSpan(Context context){
+        try {
+            FileInputStream inputStream = context.openFileInput(fileName);
+            Gson gson = new Gson();
+            Scanner scanner = new Scanner(inputStream);
+            String json = scanner.nextLine();
+            Settings loadedSettings = gson.fromJson(json, Settings.class);
+            if (loadedSettings != null) {
+                this.backgroundColor = loadedSettings.backgroundColor;
+            }
+        } catch (Exception e) {
+            Log.d("FF", "load: " + e);
+        }
+        return this;
+    }
+
+    public Settings saveForegroundColorSpan(Context context) {
+        try {
+            FileOutputStream outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            Gson gson = new Gson();
+            String json = gson.toJson(this);
+            outputStream.write(json.getBytes());
+        } catch (Exception e) {
+            Log.d("FF", "save: " + e);
+        }
+        return this;
+    }
+
+    public Settings loadForegroundColorSpan(Context context){
+        try {
+            FileInputStream inputStream = context.openFileInput(fileName);
+            Gson gson = new Gson();
+            Scanner scanner = new Scanner(inputStream);
+            String json = scanner.nextLine();
+            Settings loadedSettings = gson.fromJson(json, Settings.class);
+            if (loadedSettings != null) {
+                this.foregroundColorSpan = loadedSettings.foregroundColorSpan;
             }
         } catch (Exception e) {
             Log.d("FF", "load: " + e);
