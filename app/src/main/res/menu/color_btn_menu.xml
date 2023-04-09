@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <item
+        android:id="@+id/blueBtn"
+        android:title="Blue" />
+    <item
+        android:id="@+id/blackBtn"
+        android:title="Black" />
+    <item
+        android:id="@+id/breenBtn"
+        android:title="Green" />
+    <item
+        android:id="@+id/redBtn"
+        android:title="Red" />
 </menu>
