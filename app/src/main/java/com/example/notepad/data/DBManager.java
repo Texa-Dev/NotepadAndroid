@@ -87,10 +87,9 @@ public class DBManager extends SQLiteOpenHelper {
         return noteList;
     }
 
-   /* public void findAll(){
+    public Cursor findAllCursor(){
         db = getReadableDatabase();
         String sql = "select * from "+TAB;
-        Cursor cursor = db.rawQuery(sql, new String[]{});
-
-    }*/
+        return db.rawQuery(sql, new String[]{});
+    }
 }

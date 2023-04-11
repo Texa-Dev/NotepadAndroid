@@ -52,11 +52,8 @@ public class MainActivity extends AppCompatActivity {
         }
         int styleSpan = Settings.settings().loadStyleSpan(this).getStyleSpan();
         if (styleSpan != 0) {
-            Log.d("FF", "styleSpan.getStyle(): "+ styleSpan);
             binding.editText.setTypeface(Typeface.SERIF, styleSpan);
         }
-        //
-        // binding.editText.setTextSize(TypedValue.COMPLEX_UNIT_SP,settings.getFontSize());
 
         // для проверки
         //  binding.editText.setText(String.valueOf(fontSize));
@@ -64,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         /*SpannableString string = new SpannableString("0123456789");
         ForegroundColorSpan span = new ForegroundColorSpan(0xFFFF0000);
         string.setSpan(span,3,7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
         binding.editText.setText(string);*/
 
         binding.colorBtn.setTag(new ForegroundColorSpan(Color.BLACK));
@@ -73,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             if (tag instanceof ForegroundColorSpan) {
 
                 ForegroundColorSpan foregroundColorSpan = (ForegroundColorSpan) tag;
+                binding.editText.setTextColor(foregroundColorSpan.getForegroundColor());
                 SpannableString spannable = new SpannableString(binding.editText.getText());
                 spannable.setSpan(foregroundColorSpan,
                         binding.editText.getSelectionStart(),
@@ -120,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
             if (tag instanceof BackgroundColorSpan) {
 
                 BackgroundColorSpan backgroundColorSpan = (BackgroundColorSpan) tag;
+                binding.editText.setBackgroundColor(backgroundColorSpan.getBackgroundColor());
                 SpannableString spannable = new SpannableString(binding.editText.getText());
                 spannable.setSpan(backgroundColorSpan,
                         binding.editText.getSelectionStart(),
@@ -166,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
             if (tag instanceof StyleSpan) {
 
                 StyleSpan styleSp = (StyleSpan) tag;
+                binding.editText.setTypeface(Typeface.SERIF, styleSp.getStyle());
                 SpannableString spannable = new SpannableString(binding.editText.getText());
                 spannable.setSpan(styleSp,
                         binding.editText.getSelectionStart(),
